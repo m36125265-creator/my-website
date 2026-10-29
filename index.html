@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&O Developers - Futuristic Cinematic Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        darkBg: '#050a18',
+                        cardBg: 'rgba(11, 22, 48, 0.65)',
+                        cardBorder: 'rgba(56, 189, 248, 0.2)',
+                        neonBlue: '#00f0ff',
+                        neonPurple: '#a855f7',
+                        neonGreen: '#10b981',
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 20px rgba(0, 240, 255, 0.35)',
+                        'neon-purple': '0 0 20px rgba(168, 85, 247, 0.35)',
+                        'glow-lg': '0 0 35px rgba(0, 240, 255, 0.25)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow-spin': 'glowSpin 10s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        glowSpin: {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(360deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Glassmorphism styling */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(13, 27, 62, 0.7) 0%, rgba(6, 13, 33, 0.8) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Sci-Fi Canvas Background */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glowing circular avatar ring */
+        .avatar-ring {
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00f0ff, #a855f7, #3b82f6);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.5), inset 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        /* Glowing custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        .handwritten-text {
+            font-family: 'Courier New', Courier, monospace;
+            transform: rotate(-5deg);
+        }
+
+        /* Day mode: preserve the layout while switching surfaces and text to a readable light palette. */
+        body.light-mode {
+            background-color: #edf5ff;
+            color: #172033;
+            color-scheme: light;
+        }
+        body.light-mode .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(235,244,255,.92));
+            border-color: rgba(37,99,235,.22);
+            box-shadow: 0 10px 30px rgba(30,64,175,.08);
+        }
+        body.light-mode .glass-card:hover { border-color: rgba(14,165,233,.6); }
+        body.light-mode header { background: rgba(241,247,255,.88) !important; border-color: rgba(37,99,235,.2) !important; }
+        body.light-mode footer { background: rgba(241,247,255,.92) !important; border-color: #cbd5e1 !important; }
+        body.light-mode .bg-slate-950, body.light-mode .bg-slate-950\/80,
+        body.light-mode .bg-slate-950\/60, body.light-mode .bg-slate-950\/50,
+        body.light-mode .bg-slate-950\/40, body.light-mode .bg-slate-900,
+        body.light-mode .bg-slate-900\/90, body.light-mode .bg-slate-900\/80,
+        body.light-mode .bg-slate-900\/60, body.light-mode .bg-slate-900\/50 {
+            background-color: #e4edf9 !important;
+        }
+        body.light-mode .text-white { color: #101827 !important; }
+        body.light-mode .text-slate-100, body.light-mode .text-slate-200,
+        body.light-mode .text-slate-300 { color: #263449 !important; }
+        body.light-mode .text-slate-400, body.light-mode .text-slate-500 { color: #53657d !important; }
+        body.light-mode .border-slate-800, body.light-mode .border-slate-800\/80,
+        body.light-mode .border-slate-700 { border-color: #cbd8e8 !important; }
+        body.light-mode nav { background: rgba(226,237,250,.92) !important; border-color: #cbd8e8 !important; }
+        body.light-mode input, body.light-mode textarea { background: #f8fbff !important; color: #172033 !important; border-color: #cbd8e8 !important; }
+        body.light-mode #projectModal { background: rgba(19,35,60,.55) !important; }
+        body.light-mode ::-webkit-scrollbar-track { background: #edf5ff; }
+        body.light-mode ::-webkit-scrollbar-thumb { background: #9fb5d0; border-color: rgba(37,99,235,.3); }
+
+        /* Layout polish: prevent text collisions and keep spacing readable on all screens. */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-padding-top: 6rem; }
+        body { line-height: 1.6; }
+        h1, h2, h3, h4, p, blockquote, label, a, button, span { overflow-wrap: anywhere; }
+        h1, h2, h3, p, blockquote { line-height: 1.35; }
+        p { margin-top: 0; }
+        .glass-card, section, header, footer, nav, form { min-width: 0; }
+        .flex > div, .flex > a, .flex > span { min-width: 0; }
+        .avatar-ring { flex: 0 0 auto; aspect-ratio: 1 / 1; }
+        .avatar-ring > div { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; }
+        .avatar-ring img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+        input, textarea, button { max-width: 100%; }
+        nav a { white-space: nowrap; }
+        #liveDate { white-space: nowrap; }
+        .handwritten-text { line-height: 1.25; }
+        @media (min-width: 768px) and (max-width: 1100px) {
+            header nav { display: none !important; }
+            header > div { gap: 0.75rem; }
+        }
+        @media (max-width: 767px) {
+            header { position: relative !important; }
+            header > div { height: auto !important; min-height: 5rem; padding-top: .75rem; padding-bottom: .75rem; flex-wrap: wrap; row-gap: .75rem; }
+            header > div > div:last-child { margin-left: auto; padding: .45rem .65rem; }
+            header h1 { font-size: 1rem !important; }
+            main { padding-top: 1.25rem !important; }
+            #home { padding: 1.25rem !important; }
+            .avatar-ring { width: min(72vw, 18rem) !important; height: min(72vw, 18rem) !important; }
+            #about > div { padding: 1.25rem !important; }
+            #mahmoud h2, #omar h2 { font-size: 1.2rem !important; line-height: 1.4 !important; padding-top: 1.7rem; }
+            footer > div { text-align: center; }
+            .fixed.right-6.bottom-8 { right: .75rem !important; bottom: .75rem !important; }
+        }
+    
+        /* Final responsive readability fixes */
+        *, *::before, *::after { box-sizing: border-box; }
+        body { line-height: 1.65; }
+        h1, h2, h3, p, a, span, label, button { overflow-wrap: anywhere; }
+        section, .glass-card, form, .grid > div { min-width: 0; }
+        input, textarea, button { max-width: 100%; }
+        img { max-width: 100%; }
+        @media (max-width: 640px) {
+          main { padding-left: 1rem !important; padding-right: 1rem !important; }
+          #about { gap: 1rem !important; }
+          #mahmoud, #omar { padding: 1.1rem !important; }
+          #mahmoud h2, #omar h2 { max-width: 100%; font-size: 1.05rem !important; line-height: 1.45 !important; }
+          #mahmoud .font-mono, #omar .font-mono { letter-spacing: 0; }
+          #contact form { padding: 1rem !important; }
+        }
+</style>
+</head>
+<body class="relative min-h-screen text-slate-100 antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Interactive Dynamic Canvas Background -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Floating Social Quick Action Buttons -->
+    <div class="fixed right-6 bottom-8 z-50 flex flex-col gap-4">
+        <!-- Floating WhatsApp -->
+        <a href="https://wa.me/201010710402" target="_blank" rel="noopener noreferrer" 
+           class="group relative flex items-center justify-center w-14 h-14 bg-emerald-500 text-white rounded-full shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.8)]">
+            <i class="fa-brands fa-whatsapp text-3xl"></i>
+            <span class="absolute right-16 bg-slate-900 border border-emerald-500/40 text-emerald-400 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl font-mono">
+                Chat with us on WhatsApp
+            </span>
+        </a>
+        <!-- Floating Telegram -->
+        <a href="https://t.me/201010710402" target="_blank" rel="noopener noreferrer" 
+           class="group relative flex items-center justify-center w-14 h-14 bg-sky-500 text-white rounded-full shadow-lg hover:scale-110 transition-all duration-300 hover:shadow-[0_0_25px_rgba(14,165,233,0.8)]">
+            <i class="fa-brands fa-telegram text-3xl"></i>
+            <span class="absolute right-16 bg-slate-900 border border-sky-500/40 text-sky-400 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl font-mono">
+                Join our Telegram Channel
+            </span>
+        </a>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/70 border-b border-sky-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 p-[2px] shadow-neon-blue">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <span class="font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 text-xl">&lt;/&gt;</span>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wide text-white">M&amp;O <span class="text-cyan-400 text-sm font-normal">Developers</span></h1>
+                    <p class="text-[10px] text-slate-400 tracking-wider uppercase font-mono">Code • Build • Create</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1.5 rounded-full border border-slate-800/80">
+                <a href="#home" class="px-5 py-2 text-sm font-medium rounded-full text-cyan-400 bg-sky-500/10 border border-sky-500/30 transition">Home</a>
+                <a href="#about" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">About</a>
+                <a href="#mahmoud" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">Mahmoud</a>
+                <a href="#omar" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">Omar</a>
+                <a href="#projects" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">Projects</a>
+                <a href="#skills" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">Skills</a>
+                <a href="#contact" class="px-5 py-2 text-sm font-medium rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/50 transition">Contact</a>
+            </nav>
+
+            <!-- Date & Mode Toggle -->
+            <div class="flex items-center space-x-3 font-mono text-xs text-sky-300/80 bg-slate-900/80 px-4 py-2 rounded-xl border border-sky-500/20">
+                <i class="fa-regular fa-calendar text-cyan-400"></i>
+                <span id="liveDate">2026-10-29</span>
+                <button id="themeToggle" class="ml-2 text-yellow-400 hover:scale-110 transition">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- HERO SECTION -->
+        <section id="home" class="relative glass-card rounded-3xl p-8 lg:p-12 overflow-hidden border border-sky-500/30">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <!-- Left Hero Text -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        <span>✦ Welcome to our Portfolio</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+                        We are <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-purple-500">Mahmoud &amp; Omar</span>
+                    </h1>
+
+                    <p class="text-lg sm:text-xl text-cyan-200/80 font-mono">
+                        Two Brothers &bull; One Team &bull; Big Dreams
+                    </p>
+
+                    <p class="text-slate-300 leading-relaxed max-w-2xl text-base">
+                        We are two young developers, passionate about programming, AI and building amazing projects. We learn, create and grow together.
+                    </p>
+
+                    <div class="pt-4 flex flex-wrap gap-4">
+                        <a href="#projects" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold hover:shadow-neon-blue hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                            <span>View Our Projects</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                        <a href="#about" class="px-7 py-3.5 rounded-xl bg-slate-900/80 border border-slate-700 hover:border-cyan-400/50 text-slate-200 font-semibold hover:bg-slate-800 transition-all duration-300">
+                            About Us
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Hero Avatar & Motto -->
+                <div class="lg:col-span-5 relative flex flex-col items-center justify-center">
+                    <!-- Avatar Frame -->
+                    <div class="avatar-ring animate-float w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center">
+                        <div class="w-full h-full rounded-full bg-slate-950 overflow-hidden relative border-4 border-slate-900 flex items-center justify-center">
+                            <!-- Uploaded photo replacing the illustrated avatars -->
+                            <img
+                                src="assets/brothers.jpg"
+                                alt="Mahmoud and Omar"
+                                class="w-full h-full object-contain object-center rounded-full"
+                                style="display:block;"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Handwritten Quote Overlay -->
+                    <div class="mt-6 text-right w-full pr-4">
+                        <p class="handwritten-text text-xl font-bold text-cyan-300 leading-snug">
+                            Better<br/>Code<br/>Bigger<br/><span class="text-purple-400">Dreams</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEAM PROFILES SECTION -->
+        <section id="about" class="grid lg:grid-cols-2 gap-8">
+            
+            <!-- MAHMOUD'S CARD -->
+            <div id="mahmoud" class="glass-card rounded-3xl p-6 sm:p-8 relative border-t-4 border-t-cyan-400 flex flex-col justify-between">
+                <div class="absolute top-6 right-6">
+                    <span class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-cyan-500/10 border border-cyan-500/40 text-cyan-300">
+                        Full Stack Developer
+                    </span>
+                </div>
+
+                <div>
+                    <!-- Header info -->
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 p-0.5">
+                            <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center overflow-hidden">
+                                <img src="assets/mahmoud-avatar.jpg" alt="Mahmoud ElKady" style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;" />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Mahmoud ElKady</h2>
+                            <p class="text-xs font-mono text-cyan-400 mt-0.5">E-L-K-A-D-Y | Python Learner | Web Developer | AI Enthusiast</p>
+                        </div>
+                    </div>
+
+                    <!-- Quote -->
+                    <blockquote class="p-3 rounded-xl bg-slate-900/80 border-l-4 border-cyan-400 text-slate-300 text-sm italic mb-6">
+                        "Code is not just a skill, it's a way of thinking."
+                    </blockquote>
+
+                    <!-- Bio Metadata Grid -->
+                    <div class="grid grid-cols-2 gap-3 text-xs font-mono text-slate-300 mb-6 bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                        <div class="flex items-center space-x-2"><i class="fa-regular fa-user text-cyan-400"></i> <span>Age: <strong>13</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-location-dot text-cyan-400"></i> <span>Location: <strong>Egypt</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-laptop-code text-cyan-400"></i> <span>Role: <strong>Developer</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-users text-cyan-400"></i> <span>Team: <strong>M&amp;O</strong></span></div>
+                    </div>
+
+                    <!-- Skills Header -->
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 font-mono">Skills &amp; Expertise</h3>
+                    
+                    <!-- Skills Grid -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-brands fa-python text-yellow-400 text-base"></i> Python
+                            </span>
+                            <span class="text-[10px] text-cyan-400 font-mono px-2 py-0.5 bg-cyan-950 rounded">Expert</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-brands fa-html5 text-orange-500 text-base"></i> HTML
+                            </span>
+                            <span class="text-[10px] text-cyan-400 font-mono px-2 py-0.5 bg-cyan-950 rounded">Expert</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-brands fa-css3-alt text-blue-500 text-base"></i> CSS
+                            </span>
+                            <span class="text-[10px] text-sky-400 font-mono px-2 py-0.5 bg-sky-950 rounded">Advanced</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-brands fa-js text-yellow-300 text-base"></i> JavaScript
+                            </span>
+                            <span class="text-[10px] text-sky-400 font-mono px-2 py-0.5 bg-sky-950 rounded">Advanced</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-solid fa-code text-blue-400 text-base"></i> C++
+                            </span>
+                            <span class="text-[10px] text-sky-400 font-mono px-2 py-0.5 bg-sky-950 rounded">Advanced</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                                <i class="fa-brands fa-java text-red-400 text-base"></i> Java
+                            </span>
+                            <span class="text-[10px] text-purple-400 font-mono px-2 py-0.5 bg-purple-950 rounded">Intermediate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OMAR'S CARD -->
+            <div id="omar" class="glass-card rounded-3xl p-6 sm:p-8 relative border-t-4 border-t-purple-500 flex flex-col justify-between">
+                <div class="absolute top-6 right-6">
+                    <span class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-purple-500/10 border border-purple-500/40 text-purple-300">
+                        Web Developer
+                    </span>
+                </div>
+
+                <div>
+                    <!-- Header info -->
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5">
+                            <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center overflow-hidden">
+                                <img src="assets/omar-avatar.jpg" alt="Omar" style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block;" />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Omar Ali El-Rifai</h2>
+                            <p class="text-xs font-mono text-purple-400 mt-0.5">Web Developer | HTML &amp; Java Expert | (Python 25%)</p>
+                        </div>
+                    </div>
+
+                    <!-- Quote -->
+                    <blockquote class="p-3 rounded-xl bg-slate-900/80 border-l-4 border-purple-500 text-slate-300 text-sm italic mb-6">
+                        "Small steps make big projects."
+                    </blockquote>
+
+                    <!-- Bio Metadata Grid -->
+                    <div class="grid grid-cols-2 gap-3 text-xs font-mono text-slate-300 mb-6 bg-slate-950/40 p-4 rounded-xl border border-slate-800">
+                        <div class="flex items-center space-x-2"><i class="fa-regular fa-user text-purple-400"></i> <span>Age: <strong>8</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-location-dot text-purple-400"></i> <span>Location: <strong>Egypt</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-laptop-code text-purple-400"></i> <span>Role: <strong>Developer</strong></span></div>
+                        <div class="flex items-center space-x-2"><i class="fa-solid fa-users text-purple-400"></i> <span>Team: <strong>M&amp;O</strong></span></div>
+                    </div>
+
+                    <!-- Skills Header -->
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-3 font-mono">Skills &amp; Progress</h3>
+                    
+                    <!-- Progress Bars Skills -->
+                    <div class="space-y-3 mb-6">
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span class="text-slate-200"><i class="fa-brands fa-html5 text-orange-500 mr-1"></i> HTML (Expert)</span>
+                                <span class="text-purple-400">95%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                                <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span class="text-slate-200"><i class="fa-brands fa-java text-red-400 mr-1"></i> Java (Expert)</span>
+                                <span class="text-purple-400">90%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                                <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span class="text-slate-200"><i class="fa-brands fa-js text-yellow-300 mr-1"></i> JavaScript (Advanced)</span>
+                                <span class="text-purple-400">85%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                                <div class="h-full bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span class="text-slate-200"><i class="fa-brands fa-python text-yellow-400 mr-1"></i> Python (Beginner)</span>
+                                <span class="text-purple-400">25%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
+                                <div class="h-full bg-gradient-to-r from-yellow-500 to-amber-500 rounded-full" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Also Learning Pills -->
+                    <p class="text-xs font-mono text-slate-400 mb-2">Also Learning:</p>
+                    <div class="flex flex-wrap gap-2 text-[11px] font-mono">
+                        <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300"><i class="fa-brands fa-css3-alt text-blue-400 mr-1"></i>CSS</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300"><i class="fa-solid fa-code text-cyan-400 mr-1"></i>C++</span>
+                        <span class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-800 text-slate-300"><i class="fa-brands fa-github text-white mr-1"></i>Git &amp; GitHub</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="flex items-center space-x-2 text-cyan-400 font-mono text-sm mb-1">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>FEATURED WORKS</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white">Our Projects</h2>
+                    <p class="text-slate-400 text-sm">A collection of our best work. More projects are coming soon!</p>
+                </div>
+                <button onclick="openModal('addProject')" class="px-4 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 text-xs font-mono transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Suggest Project
+                </button>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Project 1: Snake Game -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Visual Box -->
+                        <div class="h-40 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800/80 mb-4 flex items-center justify-center p-4">
+                            <div class="grid grid-cols-6 gap-2 opacity-80">
+                                <div class="w-3 h-3 bg-emerald-500 rounded-sm"></div>
+                                <div class="w-3 h-3 bg-emerald-500 rounded-sm"></div>
+                                <div class="w-3 h-3 bg-emerald-500 rounded-sm"></div>
+                                <div class="w-3 h-3 bg-emerald-400 rounded-sm animate-pulse"></div>
+                                <div class="w-3 h-3 bg-slate-800 rounded-sm"></div>
+                                <div class="w-3 h-3 stroke-red-500 bg-red-500 rounded-full animate-bounce"></div>
+                            </div>
+                            <span class="absolute top-3 right-3 text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">Active</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition">Snake Game</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">A classic retro snake game built with Python featuring modern UI animations and high-score saving.</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div class="flex gap-1.5 font-mono text-[10px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-cyan-300">Python</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-purple-300">Game</span>
+                        </div>
+                        <button onclick="openModal('snake')" class="text-cyan-400 hover:text-white text-xs font-mono flex items-center gap-1">
+                            Play / Demo <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 2: Weather App -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Visual Box -->
+                        <div class="h-40 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800/80 mb-4 flex flex-col items-center justify-center p-4">
+                            <i class="fa-solid fa-cloud-sun-rain text-4xl text-amber-400 mb-2"></i>
+                            <span class="text-xl font-bold font-mono text-white">22°C</span>
+                            <span class="text-[10px] text-slate-400 font-mono">Cairo, Egypt</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition">Weather App</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">Get real-time weather information and 7-day forecast using OpenWeather API with intuitive widgets.</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div class="flex gap-1.5 font-mono text-[10px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-orange-300">HTML</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-blue-300">CSS</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-yellow-300">JS</span>
+                        </div>
+                        <button onclick="openModal('weather')" class="text-cyan-400 hover:text-white text-xs font-mono flex items-center gap-1">
+                            View <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 3: Personal Portfolio -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Visual Box -->
+                        <div class="h-40 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800/80 mb-4 flex items-center justify-center p-4">
+                            <div class="w-full h-full rounded border border-cyan-500/30 bg-slate-900/80 p-2 text-[8px] font-mono text-cyan-300 overflow-hidden">
+                                &lt;header class="hero"&gt;<br/>
+                                &nbsp;&nbsp;&lt;h1&gt;Mahmoud &amp; Omar&lt;/h1&gt;<br/>
+                                &lt;/header&gt;
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition">Personal Portfolio</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">Modern futuristic interactive portfolio website designed using custom HTML, CSS, JavaScript and Tailwind.</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div class="flex gap-1.5 font-mono text-[10px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-orange-300">HTML</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-blue-300">CSS</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-yellow-300">JS</span>
+                        </div>
+                        <button onclick="openModal('portfolio')" class="text-cyan-400 hover:text-white text-xs font-mono flex items-center gap-1">
+                            Live <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 4: AI Chatbot -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Visual Box -->
+                        <div class="h-40 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800/80 mb-4 flex items-center justify-center p-4">
+                            <i class="fa-solid fa-robot text-5xl text-cyan-400 animate-pulse"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition">AI Chatbot</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">A smart chatbot powered by Python and machine learning NLP concepts for quick user queries.</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div class="flex gap-1.5 font-mono text-[10px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-cyan-300">Python</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-purple-300">AI</span>
+                        </div>
+                        <button onclick="openModal('chatbot')" class="text-cyan-400 hover:text-white text-xs font-mono flex items-center gap-1">
+                            Explore <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 5: Number Guessing Game -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col justify-between group">
+                    <div>
+                        <!-- Project Visual Box -->
+                        <div class="h-40 rounded-xl bg-slate-950 relative overflow-hidden border border-slate-800/80 mb-4 flex flex-col items-center justify-center p-4">
+                            <span class="text-xs font-mono text-slate-400 mb-1">Guess The Number</span>
+                            <span class="text-4xl font-extrabold text-purple-400 font-mono bg-purple-950/60 px-4 py-1 rounded-lg border border-purple-500/30">?</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-400 transition">Number Guessing Game</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">A fun terminal & GUI game built with Python for beginners to test logic and probability.</p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-800/60 flex items-center justify-between">
+                        <div class="flex gap-1.5 font-mono text-[10px]">
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-cyan-300">Python</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-purple-300">Game</span>
+                        </div>
+                        <button onclick="openModal('guessing')" class="text-cyan-400 hover:text-white text-xs font-mono flex items-center gap-1">
+                            Play <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project 6: Future Project Slot -->
+                <div class="glass-card rounded-2xl p-5 border border-dashed border-slate-800 hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center justify-center text-center group cursor-pointer" onclick="openModal('addProject')">
+                    <div class="w-16 h-16 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 group-hover:text-purple-400 group-hover:scale-110 transition duration-300 mb-3">
+                        <i class="fa-solid fa-plus text-2xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white group-hover:text-purple-400 transition">And Many More Projects...</h3>
+                    <p class="text-xs text-slate-500 mt-1">Currently building exciting AI and Web applications.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SKILLS MATRIX OVERVIEW -->
+        <section id="skills" class="glass-card rounded-3xl p-8 border border-sky-500/20">
+            <h2 class="text-2xl font-bold text-white mb-2">Technical Mastery</h2>
+            <p class="text-slate-400 text-sm mb-6">Technologies and languages we actively use across our builds</p>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-yellow-500/50 transition">
+                    <i class="fa-brands fa-python text-3xl text-yellow-400 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">Python</p>
+                    <span class="text-[10px] text-slate-500">Expert / Backend</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-orange-500/50 transition">
+                    <i class="fa-brands fa-html5 text-3xl text-orange-500 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">HTML5</p>
+                    <span class="text-[10px] text-slate-500">Expert / Markup</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-blue-500/50 transition">
+                    <i class="fa-brands fa-css3-alt text-3xl text-blue-500 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">CSS3</p>
+                    <span class="text-[10px] text-slate-500">Advanced / Styling</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-yellow-300/50 transition">
+                    <i class="fa-brands fa-js text-3xl text-yellow-300 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">JavaScript</p>
+                    <span class="text-[10px] text-slate-500">Advanced / Logic</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-red-400/50 transition">
+                    <i class="fa-brands fa-java text-3xl text-red-400 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">Java</p>
+                    <span class="text-[10px] text-slate-500">Expert / Logic</span>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 text-center hover:border-cyan-400/50 transition">
+                    <i class="fa-solid fa-code text-3xl text-cyan-400 mb-2"></i>
+                    <p class="text-xs font-bold text-slate-200">C++</p>
+                    <span class="text-[10px] text-slate-500">Advanced / Performance</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="glass-card rounded-3xl p-8 lg:p-10 border border-sky-500/30">
+            <div class="grid lg:grid-cols-12 gap-10">
+                <!-- Left Details -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-paper-plane text-2xl text-cyan-400"></i>
+                        <div>
+                            <h2 class="text-2xl font-bold text-white">Get In Touch</h2>
+                            <p class="text-xs text-cyan-400 font-mono">Let's Build Something Great</p>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        Have a question or want to collaborate? Feel free to reach out to us directly through the form or via WhatsApp &amp; Telegram!
+                    </p>
+
+                    <div class="space-y-4 pt-2 font-mono text-xs">
+                        <div class="flex items-center space-x-3 text-slate-300">
+                            <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500">Phone / Mobile</p>
+                                <a href="tel:01010710402" class="hover:text-cyan-400 font-bold">010 10 710 402</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 text-slate-300">
+                            <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-[10px] text-slate-500">Email</p>
+                                <a href="mailto:m36125265@gmail.com" class="font-bold hover:text-cyan-400 break-all">m36125265@gmail.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3 text-slate-300">
+                            <div class="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-slate-500">Location</p>
+                                <p class="font-bold">Egypt</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Direct Messenger Action Cards -->
+                    <div class="grid sm:grid-cols-2 gap-3 pt-4">
+                        <a href="https://wa.me/201010710402" target="_blank" rel="noopener noreferrer" 
+                           class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 hover:bg-emerald-900/40 transition flex items-center space-x-3">
+                            <i class="fa-brands fa-whatsapp text-2xl text-emerald-400"></i>
+                            <div>
+                                <p class="text-xs font-bold text-white">WhatsApp</p>
+                                <p class="text-[10px] text-emerald-300 font-mono">Chat Direct</p>
+                            </div>
+                        </a>
+
+                        <a href="https://t.me/201010710402" target="_blank" rel="noopener noreferrer" 
+                           class="p-3 rounded-xl bg-sky-950/40 border border-sky-500/40 hover:bg-sky-900/40 transition flex items-center space-x-3">
+                            <i class="fa-brands fa-telegram text-2xl text-sky-400"></i>
+                            <div>
+                                <p class="text-xs font-bold text-white">Telegram</p>
+                                <p class="text-[10px] text-sky-300 font-mono">Join Channel</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Interactive Form -->
+                <div class="lg:col-span-7">
+                    <form id="contactForm" action="https://formsubmit.co/m36125265@gmail.com" method="POST" class="space-y-4 bg-slate-950/50 p-6 rounded-2xl border border-slate-800">
+                        <input type="hidden" name="_subject" value="New message from M&O Developers website">
+                        <input type="hidden" name="_template" value="table">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Your Name</label>
+                                <div class="relative">
+                                    <i class="fa-regular fa-user absolute left-3 top-3 text-slate-500 text-xs"></i>
+                                    <input type="text" name="name" required placeholder="John Doe" 
+                                           class="w-full bg-slate-900/90 border border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 font-sans transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-mono text-slate-400 mb-1">Your Email</label>
+                                <div class="relative">
+                                    <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-500 text-xs"></i>
+                                    <input type="email" name="email" required placeholder="name@example.com" 
+                                           class="w-full bg-slate-900/90 border border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 font-sans transition">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-mono text-slate-400 mb-1">Your Message</label>
+                            <div class="relative">
+                                <i class="fa-regular fa-comment-dots absolute left-3 top-3 text-slate-500 text-xs"></i>
+                                <textarea name="message" rows="4" required placeholder="Write your message here..." 
+                                          class="w-full bg-slate-900/90 border border-slate-800 rounded-xl pl-9 pr-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-cyan-400 font-sans transition"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-bold text-slate-950 text-sm hover:shadow-neon-blue transition duration-300 flex items-center justify-center space-x-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+
+                        <div id="formStatus" class="hidden p-3 rounded-xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 text-xs text-center font-mono">
+                            <i class="fa-solid fa-circle-check mr-1"></i> Your message will be sent securely through our email form provider.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 bg-slate-950/80 py-8 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-cyan-400 font-extrabold">&lt;/&gt; M&amp;O Developers</span>
+                <span>&copy; 2026 M&amp;O Developers. All rights reserved.</span>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <a href="#home" class="hover:text-cyan-400 transition">Home</a>
+                <a href="#about" class="hover:text-cyan-400 transition">About</a>
+                <a href="#projects" class="hover:text-cyan-400 transition">Projects</a>
+                <a href="#contact" class="hover:text-cyan-400 transition">Contact</a>
+            </div>
+
+            <p class="handwritten-text text-sm font-bold text-purple-400">Keep Coding... &hearts;</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE MODAL DIALOG FOR PROJECTS -->
+    <div id="projectModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 border border-cyan-500/40 relative animate-float">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent" class="space-y-4">
+                <!-- Dynamic Modal Content Inserted via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ANIMATIONS & LOGIC -->
+    <script>
+        // Set Live Current Date
+        document.getElementById('liveDate').innerText = new Date().toISOString().split('T')[0];
+
+        // Day / night mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        function applyTheme(mode) {
+            const isLight = mode === 'light';
+            document.body.classList.toggle('light-mode', isLight);
+            themeIcon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            themeToggle.classList.toggle('text-yellow-400', !isLight);
+            themeToggle.classList.toggle('text-amber-500', isLight);
+            themeToggle.setAttribute('aria-label', isLight ? 'Switch to night mode' : 'Switch to day mode');
+            themeToggle.title = isLight ? 'Switch to night mode' : 'Switch to day mode';
+        }
+        applyTheme('dark');
+        themeToggle.addEventListener('click', () => {
+            applyTheme(document.body.classList.contains('light-mode') ? 'dark' : 'light');
+        });
+
+        // Background Star/Particle Canvas Simulation
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    alpha: Math.random() * 0.7 + 0.2,
+                    color: Math.random() > 0.5 ? '#00f0ff' : '#a855f7'
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw grid lines for futuristic effect
+            ctx.strokeStyle = 'rgba(15, 23, 42, 0.4)';
+            ctx.lineWidth = 1;
+            const gridSize = 60;
+            for (let x = 0; x < width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Draw particles
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+            });
+
+            ctx.shadowBlur = 0;
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        window.onload = function() {
+            initCanvas();
+            animateCanvas();
+        };
+
+        // Modal Functionality for Projects
+        function openModal(type) {
+            const modal = document.getElementById('projectModal');
+            const content = document.getElementById('modalContent');
+
+            let details = '';
+            if (type === 'snake') {
+                details = `
+                    <h3 class="text-xl font-bold text-cyan-400">🐍 Snake Game</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Built with Python and Pygame. Features sound effects, high score persistence, and multiple speed levels.</p>
+                    <a href="https://wa.me/201010710402?text=I%20want%20to%20try%20the%20Snake%20Game%20code" target="_blank" class="block text-center py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-bold mt-4">Request Code on WhatsApp</a>
+                `;
+            } else if (type === 'weather') {
+                details = `
+                    <h3 class="text-xl font-bold text-amber-400">☀️ Weather App</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Fetch live weather reports anywhere in the world using HTML, CSS, JavaScript, and OpenWeather Map API.</p>
+                    <a href="https://wa.me/201010710402?text=I%20want%20to%20see%20the%20Weather%20App" target="_blank" class="block text-center py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-bold mt-4">Ask Mahmoud & Omar</a>
+                `;
+            } else if (type === 'portfolio') {
+                details = `
+                    <h3 class="text-xl font-bold text-sky-400">🌐 Personal Portfolio</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">You are looking at it right now! Crafted with Tailwind CSS, JS animations, and futuristic glassmorphic UI.</p>
+                `;
+            } else if (type === 'chatbot') {
+                details = `
+                    <h3 class="text-xl font-bold text-purple-400">🤖 AI Chatbot</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Python artificial intelligence bot trained for simple query resolution and interactive responses.</p>
+                `;
+            } else if (type === 'guessing') {
+                details = `
+                    <h3 class="text-xl font-bold text-emerald-400">🎯 Number Guessing Game</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Fun math and logic game programmed in Python to test problem-solving speeds.</p>
+                `;
+            } else {
+                details = `
+                    <h3 class="text-xl font-bold text-white">🚀 Submit / Suggest Project</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">Have a cool project idea for Mahmoud and Omar? Send it over WhatsApp or Telegram!</p>
+                    <a href="https://wa.me/201010710402" target="_blank" class="block text-center py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-bold mt-4">Send Idea via WhatsApp</a>
+                `;
+            }
+
+            content.innerHTML = details;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
